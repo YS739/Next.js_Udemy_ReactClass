@@ -1,22 +1,5 @@
 import MeetupList from "../components/meetups/MeetupList";
-const DUMMY_MEETUPS = [
-  {
-    id: "m1",
-    title: "Seville Plaza Meetup",
-    image:
-      "https://user-images.githubusercontent.com/112805225/215753580-0c0f16df-fcc5-4e58-bcad-1baa42c14a2a.jpg",
-    address: "Seville plaza 1st",
-    description: "This is a Tapas Tour!",
-  },
-  {
-    id: "m2",
-    title: "Space Trip",
-    image:
-      "https://user-images.githubusercontent.com/112805225/215754370-45b294c4-e7ab-4dda-bc70-c50b93f3f67c.jpg",
-    address: "Space",
-    description: "This is a Space Trip!",
-  },
-];
+import { MongoClient } from "mongodb";
 
 // props = getStaticPros의 return 값
 const HomePage = (props) => {
@@ -40,10 +23,26 @@ const HomePage = (props) => {
 
 // 오직 build할 때만 실행되는 코드
 export async function getStaticProps() {
+  const client = await MongoClient.connect(
+    "mongodb+srv://test:MrBS6WBuLC0Quczm@cluster0.uvn1uhq.mongodb.net/meetups?retryWrites=true&w=majority"
+  );
+  const db = client.db();
+
+  const meetupsCollection = db.collection("meetups");
+
+  const meetups = await meetupsCollection.find().toArray();
+
+  client.close();
+
   // fetch data from an API
   return {
     props: {
-      meetups: DUMMY_MEETUPS,
+      meetups: meetups.map((meetup) => ({
+        title: meetup.title,
+        address: meetup.address,
+        image: meetup.image,
+        id: meetup._id.toString(),
+      })),
     },
     revalidate: 1,
   };
