@@ -30,6 +30,7 @@ export async function getStaticPaths() {
   // find의 첫번째 값은 가져오고 싶은 데이터, 모두 가져오려면 빈 배열
   // 두 번째는
   const meetups = await meetupsCollection.find({}, { _id: 1 }).toArray();
+
   client.close();
 
   return {
