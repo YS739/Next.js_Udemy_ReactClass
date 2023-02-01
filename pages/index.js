@@ -1,5 +1,4 @@
 import MeetupList from "../components/meetups/MeetupList";
-import { useEffect, useState } from "react";
 const DUMMY_MEETUPS = [
   {
     id: "m1",
@@ -19,23 +18,24 @@ const DUMMY_MEETUPS = [
   },
 ];
 
-const HomePage = () => {
-  // TODO: callback 사용하기..?
-  const [loadedMeetups, setLoadedMeetups] = useState([]);
-
-  useEffect(() => {
-    // send a http request and fetch data
-    setLoadedMeetups(DUMMY_MEETUPS);
-  });
-
+// props = getStaticPros의 return 값
+const HomePage = (props) => {
   return (
     <div>
-      <MeetupList meetups={loadedMeetups} />
+      <MeetupList meetups={props.meetups} />
     </div>
   );
 };
 
 // 오직 build할 때만 실행되는 코드
-export async function getStaticPros() {}
+export async function getStaticProps() {
+  // fetch data from an API
+  return {
+    props: {
+      meetups: DUMMY_MEETUPS,
+    },
+    revalidate: 5,
+  };
+}
 
 export default HomePage;
