@@ -24,7 +24,7 @@ const HomePage = (props) => {
 // 오직 build할 때만 실행되는 코드
 export async function getStaticProps() {
   const client = await MongoClient.connect(
-    "mongodb+srv://test:MrBS6WBuLC0Quczm@cluster0.uvn1uhq.mongodb.net/meetups?retryWrites=true&w=majority"
+    `mongodb+srv://test:${process.env.NEXT_PUBLIC_MONGODB_PW}@cluster0.uvn1uhq.mongodb.net/meetups?retryWrites=true&w=majority`
   );
   const db = client.db();
 
